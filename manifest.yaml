@@ -42,13 +42,13 @@ spec:
         image: nginx:latest
         ports:
         - containerPort: 80
-# ---
-# apiVersion: policy/v1
-# kind: PodDisruptionBudget
-# metadata:
-#   name: nginx
-# spec:
-#   minAvailable: "50%"
-#   selector:
-#     matchLabels:
-#       project: roboshop
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: nginx
+spec:
+  minAvailable: "50%"
+  selector:
+    matchLabels:
+      project: roboshop
