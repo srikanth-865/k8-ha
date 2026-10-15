@@ -31,12 +31,12 @@ spec:
         labelSelector:
           matchLabels:
             project: roboshop
-#       - maxSkew: 1
-#         topologyKey: topology.kubernetes.io/node
-#         whenUnsatisfiable: ScheduleAnyway
-#         labelSelector:
-#           matchLabels:
-#             project: roboshop
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/node
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            project: roboshop
       containers:
       - name: nginx
         image: nginx:latest
