@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  # labels related to deployment resource
+  labels:
+    project: roboshop
+    tier: frontend
+    component: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      project: roboshop
+      tier: frontend
+      component: frontend
+  # Pod
+  template:
+    metadata:
+      labels:
+        project: roboshop
+        tier: frontend
+        component: frontend
+    spec:
+      topologySpreadConstraints: #You are telling Kubernetes: "Please distribute my Pods across different locations."
+      - maxSkew: 1 #means the difference between the number of matching Pods in two eligible zones must not be more than 1.
+        topologyKey: topology.kubernetes.io/zone #tells Kubernetes to spread Pods across Availability Zones, not necessarily across individual nodes.
+        whenUnsatisfiable: DoNotSchedule 
+      #Suppose Zone A already has both Pods, and placing another matching Pod in Zone A would violate the spread rule.
+      #Kubernetes will not schedule that Pod there. If no other eligible placement satisfies the constraint, the Pod remains Pending.
+        labelSelector:
+          matchLabels:
+            project: roboshop
+#       - maxSkew: 1
+#         topologyKey: topology.kubernetes.io/node
+#         whenUnsatisfiable: ScheduleAnyway
+#         labelSelector:
+#           matchLabels:
+#             project: roboshop
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+# ---
+# apiVersion: policy/v1
+# kind: PodDisruptionBudget
+# metadata:
+#   name: nginx
+# spec:
+#   minAvailable: "50%"
+#   selector:
+#     matchLabels:
+#       project: roboshop
